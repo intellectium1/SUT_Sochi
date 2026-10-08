@@ -20,10 +20,11 @@ import {
   Cpu,
   UserCheck,
   Palette,
-  MessageSquare
+  MessageSquare,
+  Brain
 } from 'lucide-react';
 
-export type AppTab = 'lessons' | 'lab' | 'playground' | 'quests' | 'leaderboard' | 'chat';
+export type AppTab = 'spatial' | 'lessons' | 'lab' | 'playground' | 'quests' | 'leaderboard' | 'chat';
 
 export interface SidebarNavigationProps {
   activeTab: AppTab;
@@ -70,6 +71,19 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   };
 
   const navGroups = [
+    {
+      groupTitle: 'ИИ-Оркестрация & Холст',
+      items: [
+        {
+          id: 'spatial' as AppTab,
+          label: 'ИИ-Оркестратор',
+          subtitle: 'Пространственный граф & UX',
+          icon: <Brain className="w-4 h-4 shrink-0 text-cyan-400" />,
+          badge: '2D/Spatial',
+          badgeColor: 'text-cyan-400 bg-cyan-950/60',
+        },
+      ],
+    },
     {
       groupTitle: 'Обучающий трек',
       items: [

@@ -13,7 +13,8 @@ import {
   Shield,
   ArrowLeft,
   Palette,
-  MessageSquare
+  MessageSquare,
+  Brain
 } from 'lucide-react';
 
 interface TopHeaderBarProps {
@@ -38,6 +39,12 @@ export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
   onNavigateToLanding,
 }) => {
   const tabMetadata: Record<AppTab, { title: string; category: string; description: string; icon: React.ReactNode }> = {
+    spatial: {
+      category: 'ИИ-Оркестрация & Agentic UX',
+      title: 'Пространственный граф и Live-симуляторы',
+      description: 'Интент-ориентированная адаптивная среда с разделением ментальной нагрузки',
+      icon: <Brain className="w-4 h-4 text-cyan-400" />,
+    },
     lessons: {
       category: 'Образовательный контур',
       title: 'Интерактивные концепты и архитектура ИИ',

@@ -21,6 +21,7 @@ import { FeedbackModal } from './components/FeedbackModal';
 import { EngineeringChatSection } from './components/EngineeringChatSection';
 import { FloatingChatDrawer } from './components/FloatingChatDrawer';
 import { LandingPage } from './components/LandingPage';
+import { AgenticWorkspace } from './components/AgenticWorkspace';
 
 import { StudentProfile, Achievement, SUTDepartment, Quest, AuthMode } from './types';
 import { INITIAL_ACHIEVEMENTS, calculateLevel } from './data/achievementsData';
@@ -85,7 +86,7 @@ export default function App() {
     return session.mode;
   });
 
-  const [activeTab, setActiveTab] = useState<AppTab>('lessons');
+  const [activeTab, setActiveTab] = useState<AppTab>('spatial');
   const [isAdminInspecting, setIsAdminInspecting] = useState(false);
 
   // Popstate listener for browser back/forward buttons
@@ -587,6 +588,15 @@ export default function App() {
                 />
 
                 <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  {activeTab === 'spatial' && (
+                    <AgenticWorkspace
+                      profile={profile}
+                      onEarnXp={handleEarnXp}
+                      onUnlockAchievement={unlockAchievement}
+                      onNavigateToTab={(t) => setActiveTab(t as AppTab)}
+                    />
+                  )}
+
                   {activeTab === 'lessons' && (
                     <LessonsSection
                       completedLessonIds={profile.completedLessonIds}

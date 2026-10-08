@@ -388,6 +388,204 @@ app.post("/api/ai/byte-optimize-tokens", async (req, res) => {
   }
 });
 
+// Endpoint 5: AI Orchestrator - Dynamic Spatial Trajectory Synthesis
+app.post("/api/ai/orchestrate-intent", async (req, res) => {
+  try {
+    const { intentText, studentName, department, currentLevel } = req.body;
+    if (!intentText || typeof intentText !== "string") {
+      return res.status(400).json({ error: "Текст интента обязателен" });
+    }
+
+    const orchestrationInstruction = `Ты — ИИ-Оркестратор СЮТ Сочи (Станции Юных Техников).
+Твоя задача — преобразовать практический интент ученика в пространственный учебный граф (Spatial 2D Learning Graph).
+В EdTech интерфейсах действует строгое разделение когнитивной нагрузки:
+- Intrinsic Load (Сущностная сложность задачи, 30-60%)
+- Germane Load (Конструктивное построение ментальных моделей через связи графа, 40-70%)
+- Extraneous Load (Внешний шум интерфейса, СТРОГО 0%).
+
+Сгенерируй от 3 до 5 последовательно-связанных узлов для 2D холста.
+Координаты узлов: x от 100 до 800 (с шагом 220-250), y от 120 до 380 (для красивого разветвления).
+Типы симуляторов (simulatorType): 'rag_agent' | 'marine_cv' | 'drone_flight' | 'token_optimizer' | 'prompt_matrix'.
+
+Верни СТРОГО чистый JSON:
+{
+  "trajectoryTitle": "Название траектории",
+  "trajectorySummary": "Краткое описание траектории для ученика",
+  "domain": "Направление (Робототехника / ИИ / Аэро / Судомоделирование)",
+  "byteAdvice": "Напутствие от робота Байта",
+  "cognitiveLoad": {
+    "intrinsic": 45,
+    "germane": 55,
+    "extraneous": 0
+  },
+  "nodes": [
+    {
+      "id": "node-1",
+      "title": "Название узла",
+      "category": "foundation",
+      "status": "completed",
+      "position": { "x": 100, "y": 200 },
+      "xpReward": 60,
+      "estimatedMinutes": 8,
+      "simulatorType": "rag_agent",
+      "summary": "Что делаем на этом шаге",
+      "instruction": "Практическое задание для live-симулятора",
+      "cognitiveLoad": { "intrinsic": 35, "germane": 65, "extraneous": 0 },
+      "inputs": [],
+      "outputs": ["node-2"]
+    }
+  ],
+  "edges": [
+    { "id": "edge-1-2", "from": "node-1", "to": "node-2", "label": "Синтез знаний" }
+  ]
+}`;
+
+    const prompt = `Интент ученика: "${intentText}"
+Имя: ${studentName || "Ученик СЮТ"}
+Отделение: ${department || "Робототехника и ИИ"}
+Текущий уровень: ${currentLevel || 1}`;
+
+    const aiResult = await callGeminiSafe({
+      systemInstruction: orchestrationInstruction,
+      userPrompt: prompt,
+      temperature: 0.3,
+    });
+
+    if (aiResult) {
+      let raw = aiResult.text.trim();
+      if (raw.startsWith("```")) {
+        raw = raw.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed.nodes && parsed.nodes.length > 0) {
+          return res.json({
+            ...parsed,
+            source: "gemini",
+          });
+        }
+      } catch (e) {
+        // Fall through to domain fallback
+      }
+    }
+
+    // Curated high quality adaptive graph synthesizer
+    const lower = intentText.toLowerCase();
+    let trajectoryTitle = "Инженерная траектория СЮТ";
+    let trajectorySummary = `Оркестрованный путь для реализации задачи: «${intentText}»`;
+    let simulatorType = "rag_agent";
+    let domain = "ИИ и Нейросети";
+
+    if (lower.includes("катер") || lower.includes("суд") || lower.includes("мор") || lower.includes("ри Ble") || lower.includes("зрение") || lower.includes("yolo") || lower.includes("cv")) {
+      trajectoryTitle = "Морской Дозор: Компьютерное зрение в Черном море";
+      trajectorySummary = "Сборка детектора морских препятствий и автономного навигатора для акватории порта Сочи";
+      simulatorType = "marine_cv";
+      domain = "Компьютерное зрение & Робототехника";
+    } else if (lower.includes("дрон") || lower.includes("ахун") || lower.includes("бпла") || lower.includes("полет") || lower.includes("агент")) {
+      trajectoryTitle = "Тактический Рой БПЛА: Автономные агенты горы Ахун";
+      trajectorySummary = "Кооперативная маршрутизация поисковых беспилотников с компенсацией горного ветра";
+      simulatorType = "drone_flight";
+      domain = "БПЛА & Мультиагентные системы";
+    } else if (lower.includes("токен") || lower.includes("сжат") || lower.includes("эконом") || lower.includes("пам")) {
+      trajectoryTitle = "Оптимизация Контекста: Высокоплотные микро-промпты";
+      trajectorySummary = "Сжатие вычислительного контекста для маломощных контроллеров роботов СЮТ";
+      simulatorType = "token_optimizer";
+      domain = "Системный ИИ-инжиниринг";
+    } else {
+      trajectoryTitle = "Автономный RAG-Агент архивов СЮТ Сочи";
+      trajectorySummary = "Интерактивный конвейер векторного поиска и контекстной аугментации для инженерных задач";
+      simulatorType = "rag_agent";
+      domain = "Генеративный ИИ & RAG";
+    }
+
+    const fallbackResponse = {
+      trajectoryTitle,
+      trajectorySummary,
+      domain,
+      byteAdvice: `Байт проанализировал твой интент: «${intentText}». Мы разбили задачу на 4 четких ментальных узла с живыми симуляторами. Начни с первого активного узла!`,
+      cognitiveLoad: {
+        intrinsic: 42,
+        germane: 58,
+        extraneous: 0,
+      },
+      nodes: [
+        {
+          id: "node-int-1",
+          title: "1. Анализ входных данных и декомпозиция",
+          category: "foundation",
+          status: "completed",
+          position: { x: 100, y: 180 },
+          xpReward: 50,
+          estimatedMinutes: 5,
+          simulatorType: simulatorType,
+          summary: "Формулирование целевого вектора и системных ограничений",
+          instruction: "Изучи базовые параметры задачи в интерактивном симуляторе и выстави начальные веса.",
+          cognitiveLoad: { intrinsic: 30, germane: 70, extraneous: 0 },
+          inputs: [],
+          outputs: ["node-int-2", "node-int-3"],
+        },
+        {
+          id: "node-int-2",
+          title: "2. Конфигурация Live-симулятора",
+          category: "retrieval",
+          status: "active",
+          position: { x: 380, y: 120 },
+          xpReward: 80,
+          estimatedMinutes: 10,
+          simulatorType: simulatorType,
+          summary: "Настройка гиперпараметров в реальном времени",
+          instruction: "Запусти интерактивный стенд, протестируй граничные случаи и зафиксируй отклик.",
+          cognitiveLoad: { intrinsic: 50, germane: 50, extraneous: 0 },
+          inputs: ["node-int-1"],
+          outputs: ["node-int-4"],
+        },
+        {
+          id: "node-int-3",
+          title: "3. Векторизация и семантическое пространство",
+          category: "agent",
+          status: "active",
+          position: { x: 380, y: 300 },
+          xpReward: 70,
+          estimatedMinutes: 8,
+          simulatorType: simulatorType,
+          summary: "Анализ латентного пространства и распределения признаков",
+          instruction: "Оцени косинусную близость и точность классификации сигналов.",
+          cognitiveLoad: { intrinsic: 45, germane: 55, extraneous: 0 },
+          inputs: ["node-int-1"],
+          outputs: ["node-int-4"],
+        },
+        {
+          id: "node-int-4",
+          title: "4. Автономный запуск и валидация результата",
+          category: "eval",
+          status: "locked",
+          position: { x: 680, y: 210 },
+          xpReward: 120,
+          estimatedMinutes: 12,
+          simulatorType: simulatorType,
+          summary: "Финальная верификация работы агента на реальных тестах",
+          instruction: "Выполни итоговую миссию, подтверди устойчивость к шуму и получи сертификационный значок.",
+          cognitiveLoad: { intrinsic: 60, germane: 40, extraneous: 0 },
+          inputs: ["node-int-2", "node-int-3"],
+          outputs: [],
+        },
+      ],
+      edges: [
+        { id: "e1-2", from: "node-int-1", to: "node-int-2", label: "Параметры" },
+        { id: "e1-3", from: "node-int-1", to: "node-int-3", label: "Данные" },
+        { id: "e2-4", from: "node-int-2", to: "node-int-4", label: "Модель" },
+        { id: "e3-4", from: "node-int-3", to: "node-int-4", label: "Метрики" },
+      ],
+      source: "orchestrator-fallback",
+    };
+
+    return res.json(fallbackResponse);
+  } catch (error: any) {
+    console.warn("Orchestrate intent notice:", error?.message);
+    return res.status(500).json({ error: "Ошибка оркестратора" });
+  }
+});
+
 // Persistent JSON Database path
 const DATA_DIR = path.join(__dirname, "data");
 const STUDENTS_FILE = path.join(DATA_DIR, "students.json");
