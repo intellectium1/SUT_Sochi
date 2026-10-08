@@ -23,7 +23,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 
-export type AppTab = 'lessons' | 'lab' | 'playground' | 'quests' | 'leaderboard';
+export type AppTab = 'lessons' | 'lab' | 'playground' | 'quests' | 'leaderboard' | 'chat';
 
 export interface SidebarNavigationProps {
   activeTab: AppTab;
@@ -117,6 +117,14 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           icon: <Trophy className="w-4 h-4 shrink-0" />,
           badge: `#${studentRank} из ${totalStudents}`,
           badgeColor: 'text-amber-400 bg-amber-950/60',
+        },
+        {
+          id: 'chat' as AppTab,
+          label: 'Инженерный чат',
+          subtitle: 'Связь 15 учеников СЮТ',
+          icon: <MessageSquare className="w-4 h-4 shrink-0" />,
+          badge: 'Online',
+          badgeColor: 'text-emerald-400 bg-emerald-950/60',
         },
       ],
     },

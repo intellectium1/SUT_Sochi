@@ -18,6 +18,8 @@ import { AchievementsModal } from './components/AchievementsModal';
 import { CertificateModal } from './components/CertificateModal';
 import { CustomizationStudioModal } from './components/CustomizationStudioModal';
 import { FeedbackModal } from './components/FeedbackModal';
+import { EngineeringChatSection } from './components/EngineeringChatSection';
+import { FloatingChatDrawer } from './components/FloatingChatDrawer';
 import { LandingPage } from './components/LandingPage';
 
 import { StudentProfile, Achievement, SUTDepartment, Quest, AuthMode } from './types';
@@ -623,6 +625,13 @@ export default function App() {
                       currentStudentId={profile.id}
                     />
                   )}
+
+                  {activeTab === 'chat' && (
+                    <EngineeringChatSection
+                      currentStudent={profile}
+                      students={students}
+                    />
+                  )}
                 </main>
 
                 {/* Footer */}
@@ -716,6 +725,12 @@ export default function App() {
                 onFeedbackSubmitted={() => {
                   showToast('РЕПОРТ ПРИНЯТ', 'Спасибо за обратную связь! Отправлено наставникам СЮТ.');
                 }}
+              />
+
+              {/* Floating Quick Chat Drawer on all screens */}
+              <FloatingChatDrawer
+                currentStudent={profile}
+                onOpenFullChat={() => setActiveTab('chat')}
               />
             </div>
           )}

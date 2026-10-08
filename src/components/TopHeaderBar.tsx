@@ -68,6 +68,12 @@ export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
       description: 'Общий рейтинг учащихся по направлениям робототехники, IT и судомоделирования',
       icon: <Trophy className="w-4 h-4 text-amber-400" />,
     },
+    chat: {
+      category: 'Коллаборация и связь',
+      title: 'Инженерный радиоэфир и чат учащихся СЮТ',
+      description: 'Живое общение 15 учеников по лабораториям, личные сообщения и помощь робота Байта',
+      icon: <MessageSquare className="w-4 h-4 text-cyan-400" />,
+    },
   };
 
   const currentMeta = tabMetadata[activeTab];

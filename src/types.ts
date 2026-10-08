@@ -99,7 +99,7 @@ export interface TokenUsage {
 
 export type AuthMode = 'gateway' | 'login' | 'student' | 'admin';
 
-export type AppTab = 'lessons' | 'lab' | 'playground' | 'quests' | 'leaderboard';
+export type AppTab = 'lessons' | 'lab' | 'playground' | 'quests' | 'leaderboard' | 'chat';
 
 
 export interface CustomQuestForm {
